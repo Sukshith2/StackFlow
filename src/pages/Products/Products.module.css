@@ -1,0 +1,158 @@
+.products{
+     display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+.pageHeading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.pageHeading h1 {
+  font-size: 26px;
+  color: #111827;
+  margin-bottom: 8px;
+}
+
+.pageHeading p {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.addButton{
+    display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 16px;
+  background: #2563eb;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.toobar{
+    display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.searchBox{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 0 12px;
+    flex: 1;
+    max-width: 400px;
+    color: #6b7280;
+}
+
+
+.searchBox input {
+  width: 100%;
+  padding: 12px 0;
+  border: none;
+  outline: none;
+  font-size: 14px;
+}
+
+.filterButton{
+    display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 16px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.tableContainer {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  overflow-x: auto;
+}
+
+.tabel {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.tabel th,
+.tabel td {
+  padding: 16px;
+  border-bottom: 1px solid #f3f4f6;
+  font-size: 14px;
+}
+
+.tabel th {
+  color: #6b7280;
+  font-weight: 600;
+}
+
+
+.tabel td {
+  color: #374151;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+.paginationInfo,
+.paginationButtons {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.pagination select {
+  padding: 7px 10px;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  background: #ffffff;
+}
+
+.paginationButtons button {
+  padding: 8px 12px;
+  border: 1px solid #e5e7eb;
+  background: #ffffff;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.paginationButtons button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+
+@media (max-width: 767px) {
+  .pageHeading {
+    align-items: flex-start;
+    gap: 16px;
+    flex-direction: column;
+  }
+.pagination {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .toolbar {
+    flex-wrap: wrap;
+  }
+
+  .searchBox {
+    max-width: none;
+    flex-basis: 100%;
+  }
+}

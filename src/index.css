@@ -1,0 +1,27 @@
+:root {
+  --primary-color: #2563eb;
+  --background-color: #f8fafc;
+  --text-color: #111827;
+  --border-color: #e5e7eb;
+  --border-radius: 8px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+body {
+  font-family: Arial, sans-serif;
+  background: #FFF
+}
+
+.app-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.main-content {
+  flex: 1;
+  padding: 32px;
+}
