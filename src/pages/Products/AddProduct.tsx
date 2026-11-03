@@ -46,21 +46,29 @@ const AddProduct = ({onCancel, onSubmit} : addProductProps) => {
             newErrors.category = "Please select a category";
             }
 
-            if(formData.price === "" || Number(formData.price)<=0 ){
+            if(formData.price === 0 || Number(formData.price) <= 0 ){
                 newErrors.price = "Please enter a valid price";
             }
 
-            if(formData.stock === "" || !Number.isInteger(Number(formData.stock)) || Number(formData.stock) < 0){
+            if(formData.stock === 0 || !Number.isInteger(Number(formData.stock)) || Number(formData.stock) < 0){
                 newErrors.stock = "Please enter a valid stock quantity";
             }
 
-            if(formData.minStock === "" || !Number.isInteger(Number(formData.minStock)) || Number(formData.minStock) < 0){
+            if(formData.minStock === 0 || !Number.isInteger(Number(formData.minStock)) || Number(formData.minStock) < 0){
                 newErrors.minStock = "Please enter a valid minimum stock level";
             }
             SetError(newErrors);
+            return Object.keys(newErrors).length === 0;
 
-            retrun object.keys
+        }
 
+        const handleSubmit = (e: React.FormEvent<HTMLFormElement>)=>{
+            e.preventDefault();
+            if(!validateForm){
+                return
+            }
+
+            onSubmit(formData);
         }
 
 
@@ -73,17 +81,19 @@ const AddProduct = ({onCancel, onSubmit} : addProductProps) => {
         </div>
 
 
-            <form onSumbit={handleChange}>
+            <form onChange={handleSubmit} >
                 <div className={Styles.formGrid}>
                     <div className={Styles.formGroup}>
                         <label htmlFor="name">Product Name</label>
                         <input type="text" placeholder="Product Name" id="name" name="name" value={formData.name} onChange={handleChange}/>
+                        {error.name && <span>{error.name}</span> }
                                   
                     </div>
 
                     <div className={Styles.formGroup}>
                         <label htmlFor="sku">SKU</label>
-                        <input type="text" name="sku" id="sku" Placeholder="enter SKU" value={formData.sku} onChange={handleChange}/>
+                        <input type="text" name="sku" id="sku" placeholder="enter SKU" value={formData.sku} onChange={handleChange}/>
+                        {error.sku && <span>{error.sku}</span> }
                     </div>
 
 
@@ -95,6 +105,7 @@ const AddProduct = ({onCancel, onSubmit} : addProductProps) => {
                             <option value="Accessories">Accessories</option>
                             <option value="Furniture">Furniture</option>
                             <option value="Stationery">Stationery</option>
+                            {error.category && <span>{error.category}</span> }
                         </select>
 
                     </div>
@@ -102,26 +113,27 @@ const AddProduct = ({onCancel, onSubmit} : addProductProps) => {
                     <div className={Styles.formGroup}>
                         <label htmlFor="price">Price</label>
                         <input type="Number" name="price" id="price" value={formData.price} min="0" step="0.1" placeholder="Enter price" onChange={handleChange}/>
+                        {error.price && <span>{error.price}</span> }
                     </div>
 
                     <div className={Styles.formGroup}>
                         <label htmlFor="stock">Stock Quantity</label>
                         <input name="stock" id="stock" min="0" step="1" value={formData.stock} placeholder='Enter the Stock Quantity' onChange={handleChange}/>
+                        {error.stock && <span>{error.stock}</span>}
 
                     </div>
 
                     <div className={Styles.formGroup}>
                         <label htmlFor="minStock">Minimum Stock Level</label>
                         <input name="minStock" id="minStock" min="0" step="1" value={formData.minStock} placeholder='Enter minimum stock level' onChange={handleChange}/>
+                        {error.minStock && <span>{error.minStock}</span> }
                     </div>
 
                     <div className={Styles.actions}>
                         <button type="submit" onClick={onCancel}>
                            Cancel
                         </button>
-                        <button type="submit" onClick={onSubmit}>
-                           Save Product
-                        </button>
+                        <button type="submit"> Save Product </button>
                     </div>
 
                     </div>

@@ -1,7 +1,7 @@
-import { Filter, Plus, Search } from 'lucide-react';
+import {Plus, Search } from 'lucide-react';
 import Styles from './Products.module.css';
 import { useState } from 'react';
-
+import AddProduct from './AddProduct';
 type statusProduct = "In Stock" | "Low Stock" | "Out of Stock";
 
 interface Product {
