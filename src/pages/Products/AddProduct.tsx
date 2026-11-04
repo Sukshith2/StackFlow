@@ -1,9 +1,7 @@
 import React, { useState } from 'react'
-
-
 import Styles from './AddProduct.module.css';
 
-interface ProductFormDataProps {
+export interface ProductFormDataProps {
     name: string;
     sku: string;
     category: string;
@@ -69,7 +67,7 @@ console.log(setFormData);
             if(!validateForm()){
                 return;
             }
-                        onSubmit(formData);
+        onSubmit(formData);
 
         };
 
@@ -133,7 +131,8 @@ console.log(setFormData);
 
                     <div className={Styles.actions}>
                         <button type="button" onClick={onCancel}> Cancel </button>
-                        {isEditing ? "Save product" : "update Product"}
+                        <button type='submit'>{isEditing ? "update Product" : "Save product"}</button>
+                        
                     </div>
 
                     </div>
@@ -147,4 +146,4 @@ console.log(setFormData);
   )
 }
 
-export default AddProduct
+export default AddProduct;

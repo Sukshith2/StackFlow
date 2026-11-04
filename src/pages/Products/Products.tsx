@@ -1,7 +1,7 @@
-import {Pencil, Plus, Search } from 'lucide-react';
+import {Pencil, Plus, Search, Trash } from 'lucide-react';
 import Styles from './Products.module.css';
 import { useState } from 'react';
-import {AddProduct, type ProductFormDataProps } from './AddProduct';
+import AddProduct, { type ProductFormDataProps,} from './AddProduct';
 type statusProduct = "In Stock" | "Low Stock" | "Out of Stock";
 
 interface Product {
@@ -125,7 +125,7 @@ console.log("2. Created product:", products);
     
 }
 
-const HandleUpdatedProduct = (updatedData : Product) => {
+const HandleUpdatedProduct = (updatedData : ProductFormDataProps) => {
 
     if(!editProduct) return;
 
@@ -144,6 +144,14 @@ const HandleUpdatedProduct = (updatedData : Product) => {
     setShowform(false);       
     
 }
+
+const HandleDeleteProduct = (id : number) =>{
+        const confirmDeleted = window.confirm("Are you sure want to deleted the product");
+
+       if (!confirmDeleted) return;
+       
+       setProductList((prev)=> prev.filter((product) => product.id !== id));
+}
   return (
     <div className={Styles.products}>
         <div className={Styles.pageHeading}>
@@ -159,7 +167,7 @@ const HandleUpdatedProduct = (updatedData : Product) => {
         </div>
 
         {showForm && (<AddProduct key={editProduct?.id ?? "new" } 
-        onCancel={() => {setShowform(false) setEditProduct(null)}} 
+        onCancel={() => {setShowform(false), setEditProduct(null)}} 
         initialData = { editProduct ? {
          name : editProduct.name,
          sku : editProduct.sku,
@@ -171,9 +179,7 @@ const HandleUpdatedProduct = (updatedData : Product) => {
         } :
         undefined 
         } 
-        isEditing = {!!editProduct} onSubmit={editProduct ? HandleUpdatedProduct : HandleProdcuts}
-        
-        onSubmit={HandleProdcuts}/>)}
+        isEditing = {!!editProduct} onSubmit={editProduct ? HandleUpdatedProduct : HandleProdcuts} />)}
 
         {!showForm && (
         <div className={Styles.toobar}>
@@ -227,6 +233,11 @@ const HandleUpdatedProduct = (updatedData : Product) => {
                         <td>
                            <button onClick={() => {setEditProduct(prod); setShowform(true)}} title='Edit Product'>
                             <Pencil size={18}/>
+                           </button>
+                        </td>
+                        <td>
+                       <button onClick={() => {HandleDeleteProduct(prod.id)} } title='Delete Product'>
+                            <Trash size={18}/>
                            </button>
                         </td>
                      </tr>
