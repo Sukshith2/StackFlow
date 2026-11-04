@@ -15,11 +15,13 @@ interface ProductFormDataProps {
 interface addProductProps {
     onCancel: () => void;
     onSubmit : (productData : ProductFormDataProps) => void;
+    initialData? : ProductFormDataProps;
+    isEditing : boolean; 
 }
 
 
-const AddProduct = ({onCancel, onSubmit} : addProductProps) => {
-    const [formData, setFormData] = useState<ProductFormDataProps>({name: "",
+const AddProduct = ({onCancel, onSubmit, initialData, isEditing=false } : addProductProps) => {
+    const [formData, setFormData] = useState<ProductFormDataProps>(initialData??  {name: "",
         sku: "", 
         category: "", price: 0, stock:0 , minStock: 0});
 
@@ -76,7 +78,7 @@ console.log(setFormData);
   return (
     <div className={Styles.formContainer}>
         <div className={Styles.heading}>
-             <h2>Add New Product</h2>
+             {isEditing ? "Edit Product" : "Add New Product" }
         <p>Enter the details of your new inventory product.</p>
         </div>
 
@@ -131,7 +133,7 @@ console.log(setFormData);
 
                     <div className={Styles.actions}>
                         <button type="button" onClick={onCancel}> Cancel </button>
-                        <button type="submit"> Save Product </button>
+                        {isEditing ? "Save product" : "update Product"}
                     </div>
 
                     </div>
