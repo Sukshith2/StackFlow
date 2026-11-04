@@ -1,7 +1,7 @@
-import {Plus, Search } from 'lucide-react';
+import {Pencil, Plus, Search } from 'lucide-react';
 import Styles from './Products.module.css';
 import { useState } from 'react';
-import AddProduct from './AddProduct';
+import {AddProduct, type ProductFormDataProps } from './AddProduct';
 type statusProduct = "In Stock" | "Low Stock" | "Out of Stock";
 
 interface Product {
@@ -66,7 +66,9 @@ const Products = () => {
     const [Currentpage, setCurrentPage] = useState(1);
     const [itemPerPage, SetitemPerPage] = useState(5);
     const [ProductList, setProductList] = useState<Product[]>(products);
+    const [editProduct, setEditProduct] = useState<Product | null>(null);
     const [showForm, setShowform] = useState(false);
+    
 
 
 const filterProducts = ProductList.filter((products)=>{
@@ -122,6 +124,26 @@ console.log("2. Created product:", products);
         setShowform(false);
     
 }
+
+const HandleUpdatedProduct = (updatedData : Product) => {
+
+    if(!editProduct) return;
+
+    setProductList((prev) => prev.map((pr)=> (
+        pr.id === editProduct.id ? {
+            ...pr, updatedData,
+             price: Number(updatedData.price),
+            stock : Number(updatedData.stock),
+            minStock : Number(updatedData.minStock),
+            status : (updatedData.stock === 0  ? "Out of Stock" : Number(updatedData.stock) <= Number(updatedData.minStock) ? "Low Stock" : "In Stock")
+        } : pr
+        
+    )));
+
+    setEditProduct(null);
+    setShowform(false);       
+    
+}
   return (
     <div className={Styles.products}>
         <div className={Styles.pageHeading}>
@@ -136,7 +158,22 @@ console.log("2. Created product:", products);
         </button>
         </div>
 
-        {showForm && (<AddProduct onCancel={() => setShowform(false)} onSubmit={HandleProdcuts}/>)}
+        {showForm && (<AddProduct key={editProduct?.id ?? "new" } 
+        onCancel={() => {setShowform(false) setEditProduct(null)}} 
+        initialData = { editProduct ? {
+         name : editProduct.name,
+         sku : editProduct.sku,
+         category: editProduct.category,
+            price: editProduct.price,
+            stock: editProduct.stock,
+            minStock: editProduct.minStock,
+
+        } :
+        undefined 
+        } 
+        isEditing = {!!editProduct} onSubmit={editProduct ? HandleUpdatedProduct : HandleProdcuts}
+        
+        onSubmit={HandleProdcuts}/>)}
 
         {!showForm && (
         <div className={Styles.toobar}>
@@ -187,6 +224,11 @@ console.log("2. Created product:", products);
                         <td>{prod.stock}</td>
                         <td>{prod.minStock}</td>
                         <td>{prod.status}</td>
+                        <td>
+                           <button onClick={() => {setEditProduct(prod); setShowform(true)}} title='Edit Product'>
+                            <Pencil size={18}/>
+                           </button>
+                        </td>
                      </tr>
                 ))}
 
