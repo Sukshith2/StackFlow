@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 
 
-import Styles from './Products.module.css';
+import Styles from './AddProduct.module.css';
 
 interface ProductFormDataProps {
     name: string;
@@ -30,7 +30,7 @@ const AddProduct = ({onCancel, onSubmit} : addProductProps) => {
             const {name, value} = event.target;
             setFormData((prev)=> ({ ...prev, [name] : value}));           
         }
-
+console.log(setFormData);
 
         const validateForm = () => {
             const newErrors : Partial<Record<keyof ProductFormDataProps, string>> ={};
@@ -64,12 +64,12 @@ const AddProduct = ({onCancel, onSubmit} : addProductProps) => {
 
         const handleSubmit = (e: React.FormEvent<HTMLFormElement>)=>{
             e.preventDefault();
-            if(!validateForm){
-                return
+            if(!validateForm()){
+                return;
             }
+                        onSubmit(formData);
 
-            onSubmit(formData);
-        }
+        };
 
 
 
@@ -81,7 +81,7 @@ const AddProduct = ({onCancel, onSubmit} : addProductProps) => {
         </div>
 
 
-            <form onChange={handleSubmit} >
+            <form onSubmit={handleSubmit} >
                 <div className={Styles.formGrid}>
                     <div className={Styles.formGroup}>
                         <label htmlFor="name">Product Name</label>
@@ -130,9 +130,7 @@ const AddProduct = ({onCancel, onSubmit} : addProductProps) => {
                     </div>
 
                     <div className={Styles.actions}>
-                        <button type="submit" onClick={onCancel}>
-                           Cancel
-                        </button>
+                        <button type="button" onClick={onCancel}> Cancel </button>
                         <button type="submit"> Save Product </button>
                     </div>
 
