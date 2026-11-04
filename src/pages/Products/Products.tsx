@@ -1,16 +1,17 @@
-import {Plus, Search } from 'lucide-react';
+import {Pencil, Plus, Search } from 'lucide-react';
 import Styles from './Products.module.css';
 import { useState } from 'react';
-import AddProduct from './AddProduct';
+import {AddProduct, type ProductFormDataProps } from './AddProduct';
 type statusProduct = "In Stock" | "Low Stock" | "Out of Stock";
 
 interface Product {
-    id : number;
-    name: string;
+  id : number;
+  name: string;
   sku: string;
   category: string;
   price: number;
   stock: number;
+  minStock : number;
   status: statusProduct;
 }
 
@@ -22,6 +23,7 @@ const products : Product[] =[
     category: "Accessories",
     price: 799,
     stock: 45,
+    minStock: 0,
     status: "In Stock",
     },
 
@@ -32,6 +34,7 @@ const products : Product[] =[
     category: "Electronics",
     price: 2499,
     stock: 5,
+    minStock: 0,
     status: "Low Stock",
   },
   {
@@ -41,6 +44,7 @@ const products : Product[] =[
     category: "Accessories",
     price: 1299,
     stock: 8,
+    minStock: 0,
     status: "Low Stock",
   },
   {
@@ -50,6 +54,7 @@ const products : Product[] =[
     category: "Electronics",
     price: 12999,
     stock: 0,
+    minStock: 0,
     status: "Out of Stock",
   },
 ]
@@ -60,8 +65,13 @@ const Products = () => {
     const [sort, setSort] = useState("default");
     const [Currentpage, setCurrentPage] = useState(1);
     const [itemPerPage, SetitemPerPage] = useState(5);
+    const [ProductList, setProductList] = useState<Product[]>(products);
+    const [editProduct, setEditProduct] = useState<Product | null>(null);
+    const [showForm, setShowform] = useState(false);
+    
 
-const filterProducts = products.filter((products)=>{
+
+const filterProducts = ProductList.filter((products)=>{
     const search = searchTem.toLocaleLowerCase();
     const matchedSearch = products.name.toLowerCase().includes(search) || products.sku.toLowerCase().includes(search) || products.category.toLowerCase().includes(search)
     const matchedFilter = selectedStatus === "All" || products.status === selectedStatus; 
@@ -88,13 +98,52 @@ const SortProducts = [...filterProducts].sort((a,b)=>{
 })
 
 const totalProducts = SortProducts.length;
-
 const totalPages = Math.ceil(totalProducts / itemPerPage);
 const startIndex = (Currentpage -1 ) * itemPerPage;
 const paginatedProducts = SortProducts.slice(startIndex, startIndex + itemPerPage);
+const HandleProdcuts= (newProduct : { 
+    name: string, 
+    sku : string, 
+    category: string;
+    price: number;
+    stock: number;
+    minStock: number; }) =>{
+        const products : Product={
 
+            id: Date.now(),
+            name : newProduct.name,
+            sku : newProduct.sku,
+            category : newProduct.category,
+            price: Number(newProduct.price),
+            stock : Number(newProduct.stock),
+            minStock : Number(newProduct.minStock),
+            status : (newProduct.stock === 0  ? "Out of Stock" : Number(newProduct.stock) <= Number(newProduct.minStock) ? "Low Stock" : "In Stock")
+        };
+console.log("2. Created product:", products);
+       setProductList((prev)=> [...prev, products]);
+        setShowform(false);
+    
+}
 
-console.log(totalPages);
+const HandleUpdatedProduct = (updatedData : Product) => {
+
+    if(!editProduct) return;
+
+    setProductList((prev) => prev.map((pr)=> (
+        pr.id === editProduct.id ? {
+            ...pr, updatedData,
+             price: Number(updatedData.price),
+            stock : Number(updatedData.stock),
+            minStock : Number(updatedData.minStock),
+            status : (updatedData.stock === 0  ? "Out of Stock" : Number(updatedData.stock) <= Number(updatedData.minStock) ? "Low Stock" : "In Stock")
+        } : pr
+        
+    )));
+
+    setEditProduct(null);
+    setShowform(false);       
+    
+}
   return (
     <div className={Styles.products}>
         <div className={Styles.pageHeading}>
@@ -103,13 +152,30 @@ console.log(totalPages);
           <p>Manage your inventory products.</p>
         </div>
 
-        <button className={Styles.addButton}>
+        <button className={Styles.addButton} onClick={() => setShowform(true)}>
             <Plus size={24}/>
             Add Product
         </button>
         </div>
 
+        {showForm && (<AddProduct key={editProduct?.id ?? "new" } 
+        onCancel={() => {setShowform(false) setEditProduct(null)}} 
+        initialData = { editProduct ? {
+         name : editProduct.name,
+         sku : editProduct.sku,
+         category: editProduct.category,
+            price: editProduct.price,
+            stock: editProduct.stock,
+            minStock: editProduct.minStock,
 
+        } :
+        undefined 
+        } 
+        isEditing = {!!editProduct} onSubmit={editProduct ? HandleUpdatedProduct : HandleProdcuts}
+        
+        onSubmit={HandleProdcuts}/>)}
+
+        {!showForm && (
         <div className={Styles.toobar}>
             <div className={Styles.searchBox}>
                 <Search size={18}/>
@@ -132,7 +198,7 @@ console.log(totalPages);
             </select>
 
         </div>
-
+)}
         <div className={Styles.tableContainer}>
             <div className={Styles.tabel}>
             <thead>
@@ -142,6 +208,7 @@ console.log(totalPages);
                 <th>Category</th>
                 <th>Price</th>
                 <th>Stock</th>
+                <th>minStock</th>
                 <th>Status</th>
                 </tr>
           </thead>
@@ -155,7 +222,13 @@ console.log(totalPages);
                         <td>{prod.category}</td>
                         <td>₹{prod.price.toLocaleString("en-IN")}</td>
                         <td>{prod.stock}</td>
+                        <td>{prod.minStock}</td>
                         <td>{prod.status}</td>
+                        <td>
+                           <button onClick={() => {setEditProduct(prod); setShowform(true)}} title='Edit Product'>
+                            <Pencil size={18}/>
+                           </button>
+                        </td>
                      </tr>
                 ))}
 
@@ -164,6 +237,7 @@ console.log(totalPages);
 
             </div>
         </div>
+    
 
         <div className={Styles.pagination}>
             <div className={Styles.paginationInfo}>
@@ -192,8 +266,10 @@ console.log(totalPages);
             </div>
 
         </div>
+        
 
     </div>
+                 
   )
 }
 

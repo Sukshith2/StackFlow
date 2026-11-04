@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 
 
-import Styles from './Products.module.css';
+import Styles from './AddProduct.module.css';
 
 interface ProductFormDataProps {
     name: string;
@@ -15,11 +15,13 @@ interface ProductFormDataProps {
 interface addProductProps {
     onCancel: () => void;
     onSubmit : (productData : ProductFormDataProps) => void;
+    initialData? : ProductFormDataProps;
+    isEditing : boolean; 
 }
 
 
-const AddProduct = ({onCancel, onSubmit} : addProductProps) => {
-    const [formData, setFormData] = useState<ProductFormDataProps>({name: "",
+const AddProduct = ({onCancel, onSubmit, initialData, isEditing=false } : addProductProps) => {
+    const [formData, setFormData] = useState<ProductFormDataProps>(initialData??  {name: "",
         sku: "", 
         category: "", price: 0, stock:0 , minStock: 0});
 
@@ -30,7 +32,7 @@ const AddProduct = ({onCancel, onSubmit} : addProductProps) => {
             const {name, value} = event.target;
             setFormData((prev)=> ({ ...prev, [name] : value}));           
         }
-
+console.log(setFormData);
 
         const validateForm = () => {
             const newErrors : Partial<Record<keyof ProductFormDataProps, string>> ={};
@@ -64,24 +66,24 @@ const AddProduct = ({onCancel, onSubmit} : addProductProps) => {
 
         const handleSubmit = (e: React.FormEvent<HTMLFormElement>)=>{
             e.preventDefault();
-            if(!validateForm){
-                return
+            if(!validateForm()){
+                return;
             }
+                        onSubmit(formData);
 
-            onSubmit(formData);
-        }
+        };
 
 
 
   return (
     <div className={Styles.formContainer}>
         <div className={Styles.heading}>
-             <h2>Add New Product</h2>
+             {isEditing ? "Edit Product" : "Add New Product" }
         <p>Enter the details of your new inventory product.</p>
         </div>
 
 
-            <form onChange={handleSubmit} >
+            <form onSubmit={handleSubmit} >
                 <div className={Styles.formGrid}>
                     <div className={Styles.formGroup}>
                         <label htmlFor="name">Product Name</label>
@@ -130,10 +132,8 @@ const AddProduct = ({onCancel, onSubmit} : addProductProps) => {
                     </div>
 
                     <div className={Styles.actions}>
-                        <button type="submit" onClick={onCancel}>
-                           Cancel
-                        </button>
-                        <button type="submit"> Save Product </button>
+                        <button type="button" onClick={onCancel}> Cancel </button>
+                        {isEditing ? "Save product" : "update Product"}
                     </div>
 
                     </div>
