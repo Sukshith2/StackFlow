@@ -167,7 +167,7 @@ const HandleDeleteProduct = (id : number) =>{
         </div>
 
         {showForm && (<AddProduct key={editProduct?.id ?? "new" } 
-        onCancel={() => {setShowform(false), setEditProduct(null)}} 
+        onCancel={() => {setShowform(false); setEditProduct(null)}} 
         initialData = { editProduct ? {
          name : editProduct.name,
          sku : editProduct.sku,
